@@ -1,0 +1,100 @@
+CREATE TABLE `pharmacy`.`drugs` (
+  `id` INT NOT NULL,
+  `commercy_name` VARCHAR(45) NOT NULL,
+  `MNN_name` VARCHAR(45) NOT NULL,
+  `country` VARCHAR(45) NOT NULL,
+  `release_form` VARCHAR(45) NOT NULL,
+  `quantity_in_primary_pack` INT(100) NOT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `pharmacy`.`request` (
+  `id` INT NOT NULL,
+  `number_request` VARCHAR(45) NOT NULL,
+  `date_compilation` VARCHAR(45) NOT NULL,
+  `date_shipment` VARCHAR(45) NOT NULL,
+  `status` VARCHAR(45) NOT NULL,
+  `ph_id` INT(100) NOT NULL,
+  `em_id` INT(100) NOT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `pharmacy`.`drugs_request` (
+  `id_drug` INT NOT NULL,
+  `id_request` INT NOT NULL,
+  `quantity` INT NOT NULL,
+  `number` INT NOT NULL);
+
+CREATE TABLE `pharmacy`.`pharmacies` (
+  `id` INT NOT NULL,
+  `adres` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `FIO_director` VARCHAR(45) NOT NULL,
+  `phonel` VARCHAR(45) NOT NULL,
+  `request_id` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `pharmacy`.`employee` (
+  `id` INT NOT NULL,
+  `phone` INT(100) NOT NULL,
+  `FIO` VARCHAR(45) NOT NULL,
+  `place_residence` VARCHAR(45) NOT NULL,
+  `passport_data` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `pharmacy`.`invoice` (
+  `id` INT NOT NULL,
+  `id_request` INT(100) NOT NULL,
+  `id_w_m` INT(100) NOT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `pharmacy`.`w_m` (
+  `id` INT NOT NULL,
+  `date_recipt` VARCHAR(45) NOT NULL,
+  `price` INT(100) NOT NULL,
+  `expiration_date` DATE NOT NULL,
+  `quantity_primary_pack` VARCHAR(45) NOT NULL,
+  `drugs_id` INT(100) NOT NULL,
+  `em_id` INT(100) NOT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `pharmacy`.`invoice_w_m` (
+  `id_invoice` INT NOT NULL,
+  `id_w_m` INT NOT NULL,
+  `quantity` INT NOT NULL);
+
+ALTER TABLE pharmacy.drugs_request
+ADD CONSTRAINT fk_dr_req
+FOREIGN KEY (id_request) REFERENCES pharmacy.request(id);
+
+ALTER TABLE pharmacy.drugs_request
+ADD CONSTRAINT fk_dr_req1
+FOREIGN KEY (id_drug) REFERENCES pharmacy.drugs(id);
+
+ALTER TABLE pharmacy.w_m
+ADD CONSTRAINT fk_dr_w_m
+FOREIGN KEY (drugs_id) REFERENCES pharmacy.drugs(id);
+
+ALTER TABLE pharmacy.request
+ADD CONSTRAINT fk_req_ph
+FOREIGN KEY (ph_id) REFERENCES pharmacy.pharmacies(id);
+
+ALTER TABLE pharmacy.request
+ADD CONSTRAINT fk_req_em
+FOREIGN KEY (em_id) REFERENCES pharmacy.employee(id);
+
+ALTER TABLE pharmacy.invoice
+ADD CONSTRAINT fk_inv_req
+FOREIGN KEY (id_request) REFERENCES pharmacy.request(id);
+
+ALTER TABLE pharmacy.w_m
+ADD CONSTRAINT fk_w_m_empl
+FOREIGN KEY (em_id) REFERENCES pharmacy.employee(id);
+
+ALTER TABLE pharmacy.invoice_w_m
+ADD CONSTRAINT fk_w_m_inv
+FOREIGN KEY (id_invoice) REFERENCES pharmacy.invoice(id);
+
+ALTER TABLE pharmacy.invoice_w_m
+ADD CONSTRAINT fk_w_m_inv1
+FOREIGN KEY (id_w_m) REFERENCES pharmacy.w_m(id);
+
+
